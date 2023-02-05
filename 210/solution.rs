@@ -61,3 +61,15 @@ impl Solution {
         result
     }
 }
+
+/*
+TEST
+println!(
+    "{:#?}",
+    Solution::find_order(
+        4,
+        vec![vec![2, 0], vec![1, 0], vec![3, 1], vec![3, 2], vec![1, 3]]
+    )
+);
+*/
+
