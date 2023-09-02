@@ -8,24 +8,25 @@ class Node:
         self.next = next
 """
 
-# class Solution:
-#     def connect(self, root: 'Optional[Node]') -> 'Optional[Node]':
-#         if root is None:
-#             return root
-#         cur, next_ptr = root, root.left
-#         while cur and next_ptr:
-#             cur.left.next = cur.right
-#             if cur.next:
-#                 cur.right.next = cur.next.left
-#             cur = cur.next
-#             if not cur:
-#                 cur = next_ptr
-#                 next_ptr = cur.left
-#         return root
-
-
-from collections import deque
-
+class Solution:
+    def connect(self, root: "Optional[Node]") -> "Optional[Node]":
+        if root is None:
+            return root
+        top_node = root
+        while top_node:
+            cur = top_node
+            dummy = Node()
+            prev = dummy
+            while cur:
+                if cur.left:
+                    prev.next = cur.left
+                    prev = prev.next
+                if cur.right:
+                    prev.next = cur.right
+                    prev = prev.next
+                cur = cur.next
+            top_node = dummy.next
+        return root
 
 class Solution:
     def connect(self, root: "Optional[Node]") -> "Optional[Node]":
@@ -46,3 +47,4 @@ class Solution:
                 if el.right:
                     queue.append(el.right)
         return root
+
