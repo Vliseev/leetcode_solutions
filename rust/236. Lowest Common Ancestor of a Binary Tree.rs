@@ -48,3 +48,46 @@ impl Solution {
         helper(root, p_val, q_val)
     }
 }
+
+impl Solution2 {
+    pub fn lowest_common_ancestor(
+        root: Option<Rc<RefCell<TreeNode>>>,
+        p: Option<Rc<RefCell<TreeNode>>>,
+        q: Option<Rc<RefCell<TreeNode>>>,
+    ) -> Option<Rc<RefCell<TreeNode>>> {
+        fn helper(
+            root: Option<Rc<RefCell<TreeNode>>>,
+            p_val: i32,
+            q_val: i32,
+        ) -> Option<Rc<RefCell<TreeNode>>> {
+            match root {
+                None => None,
+                Some(node_rc) => {
+                    let node_ref = node_rc.borrow();
+                    let current_value = node_ref.val;
+
+                    // If the current node is either p or q, return this node as the LCA candidate.
+                    if current_value == p_val || current_value == q_val {
+                        return Some(node_rc.clone());
+                    }
+
+                    // Recurse on the left and right children.
+                    let left_lca = helper(node_ref.left.clone(), p_val, q_val);
+                    let right_lca = helper(node_ref.right.clone(), p_val, q_val);
+
+                    // Determine if nodes are found in left or right subtrees.
+                    match (left_lca.as_ref(), right_lca.as_ref()) {
+                        (Some(_), Some(_)) => Some(node_rc.clone()), // Found LCA in both subtrees.
+                        (Some(_), None) => left_lca,
+                        (None, Some(_)) => right_lca,
+                        (None, None) => None,
+                    }
+                }
+            }
+        }
+        let p_val = p.unwrap().borrow().val;
+        let q_val = q.unwrap().borrow().val;
+
+        helper(root, p_val, q_val)
+    }
+}
