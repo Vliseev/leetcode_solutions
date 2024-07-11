@@ -7,6 +7,35 @@ class TrieNode:
         self.is_word = False
 
 
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.is_word = False
+
+
+def remove_word(root, word: str) -> bool:
+    def _remove(node: TrieNode, word: str, depth: int) -> bool:
+        if depth == len(word):
+            if not node.is_word:
+                return False  # Word not found
+            node.is_word = False  # Unmark the leaf node
+            return len(node.children) == 0  # If true, delete this node
+
+        char = word[depth]
+        if char not in node.children:
+            return False  # Word not found
+
+        should_delete_child = _remove(node.children[char], word, depth + 1)
+
+        if should_delete_child:
+            del node.children[char]
+            return len(node.children) == 0  # If true, delete this node
+
+        return False
+
+    return _remove(root, word, 0)
+
+
 class Solution:
     def findWords(self, board: List[List[str]], words: List[str]) -> List[str]:
         # Build the trie
@@ -23,6 +52,8 @@ class Solution:
         def dfs(i, j, node: TrieNode, path: str):
             if node.is_word:
                 result.add(path)
+                nonlocal root
+                remove_word(root, path)
                 node.is_word = False
             if i < 0 or i >= m or j < 0 or j >= n:
                 return
@@ -30,9 +61,10 @@ class Solution:
 
             if not ch in node.children:
                 return
+            cur_node = node.children[ch]
             board[i][j] = "#"
             for di, dj in ((-1, 0), (0, 1), (1, 0), (0, -1)):
-                dfs(i + di, j + dj, node.children[ch], path + ch)
+                dfs(i + di, j + dj, cur_node, path + ch)
             board[i][j] = ch
 
         # Main logic
