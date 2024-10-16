@@ -1,43 +1,32 @@
-use std::collections::BinaryHeap;
+class Solution:
+    def longestDiverseString(self, a: int, b: int, c: int) -> str:
+        heap = []
+        if a:
+            heapq.heappush(heap, (-a, 'a'))
+        if b:
+            heapq.heappush(heap, (-b, 'b'))
+        if c:
+            heapq.heappush(heap, (-c, 'c'))
 
-impl Solution {
-    pub fn longest_diverse_string(a: i32, b: i32, c: i32) -> String {
-        let mut string = String::with_capacity((a + b + c) as usize);
-        let mut heap = BinaryHeap::with_capacity(3);
-
-        if a > 0 {
-            heap.push((a, 'a'));
-        }
-        if b > 0 {
-            heap.push((b, 'b'));
-        }
-        if c > 0 {
-            heap.push((c, 'c'));
-        }
-
-        let mut total = a + b + c;
-        let mut last = None;
-
-        while let Some((mut count, ch)) = heap.pop() {
-            string.push(ch);
-            count -= 1;
-            total -= 1;
-
-            if count > (total - count) * 2 {
-                count -= 1;
-                total -= 1;
-                string.push(ch);
-            }
-
-            if let Some(last) = last.take() {
-                heap.push(last);
-            }
-
-            if count > 0 {
-                last = Some((count, ch));
-            }
-        }
-
-        string
-    }
-}
+        result = []
+        
+        while heap:
+            num1, ch1 = heapq.heappop(heap)
+            num1 = -num1
+            if len(result) >= 2 and ch1 == result[-1] and ch1 == result[-2]:
+                if heap:
+                    num2, ch2 = heapq.heappop(heap)
+                else:
+                    break
+                num2 = -num2
+                num2 -= 1
+                result.append(ch2)
+                if num2:
+                    heapq.heappush(heap, (-num2, ch2))
+                heapq.heappush(heap, (-num1, ch1))
+            else:
+                num1 -= 1
+                result.append(ch1)
+                if num1:
+                    heapq.heappush(heap, (-num1, ch1))
+        return "".join(result)
